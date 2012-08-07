@@ -47,9 +47,9 @@ sub render {
 	}
 	
 	# output.htmlを出力
-	open (NEWFILE, ">:encoding(utf8)", "output.html");
-	print NEWFILE @html;
-	close (NEWFILE);
+#	open (NEWFILE, ">:encoding(utf8)", "output.html");
+#	print NEWFILE @html;
+#	close (NEWFILE);
 
 	return @html;
 }
