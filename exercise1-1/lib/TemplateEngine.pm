@@ -5,44 +5,40 @@ use FindBin::libs;
 
 package TemplateEngine;
 
-# html用の配列
-our @html = {};
-our @escape_arr = {};
-
-# htmlファイルパスから中身を呼び出す
 sub new {
-	my @hikisu = @_;
+	my ($class, %file_hash) = @_;
+	my $data = {%file_hash};
 	
-	my $pkg = $hikisu[0];	# package名
-	my $file_str = $hikisu[2];	# htmlのファイルパス
-	
-	open( FI, "<:encoding(utf8)", $file_str) or die;
-		@html = <FI>;
-	close (FI);
-	
-	return $pkg;
+	return bless $data, $class;
 }
 
 
 # html書き換えて出力
 sub render {
-	my ($name, $hash) = @_;
-	my %hash = %$hash;	# ハッシュをデリファレンス
-		
+	my ($self, $hash) = @_;
+	
+	# 引数のハッシュをデリファレンス
+	my %hash = %$hash;
 	my $title = $hash{'title'};
 	my $content = $hash{'content'};
-	@escape_arr = {$title, $content};
+	my @escape_arr = {$title, $content};
 	
 	# エスケープ
 	my @escaped = &escape (@escape_arr);
 	
-	# ループさせてhtml書き換え
+	# ファイルオープン
+	my $file_str = $self -> {file};
+	open( FI, "<:encoding(utf8)", $file_str) or die "Cannot open ".$self->{file}.$!;
+		my @html = <FI>;
+	close (FI);
+	
+	# ループさせてテンプレhtml書き換え
 	foreach my $line (@html) {
 		if ($line =~/title/) {
-			$line =~s/{% title %}/$title/;
+			$line =~ s/{%\s*title\s*%}/$title/g;
 		}
 		elsif ($line =~/content/) {
-			$line =~s/{% content %}/$content/;
+			$line =~ s/{%\s*content\s*%}/$content/g;
 		}
 	}
 	
@@ -57,7 +53,7 @@ sub render {
 
 # エスケープ用サブルーチン
 sub escape {
-	foreach my $str (@escape_arr) {
+	foreach my $str ($_[0]) {
 		$str =~ s/&/&amp;/g;
 		$str =~ s/</&lt;/g;
 		$str =~ s/>/&gt;/g;
