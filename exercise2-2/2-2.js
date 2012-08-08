@@ -7,7 +7,7 @@ var main = function() {
 
     document.getElementById('result').innerHTML = template.render({
         title: '6月25日の日記',
-        content: 'ランチを食べすぎました http://x-collabo.com/'
+        content: 'ランチを食べすぎました http://b.hatena.ne.jp/'
     });
 };
 

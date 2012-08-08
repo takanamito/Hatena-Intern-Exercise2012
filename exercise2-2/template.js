@@ -20,13 +20,12 @@ Template.prototype = {
         
         if(search_url != -1 ) {
 	        str[1] = str[1].replace(/(http:\/\/[\x21-\x7e]+)/gi, "\<a href='$1'>$1<\/a>");
-	        console.log(str[1]);
         }
         
         // 置換
         this.html = this.html.replace(/{%\s*title\s*%}/, str[0]);
         this.html = this.html.replace(/{%\s*content\s*%}/, str[1]);
-        console.log(this.html);
+        
         return this.html;
     }
 };
